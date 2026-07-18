@@ -57,8 +57,15 @@ cd contracts/reputation_verifier && scarb build
 
 - [x] Garaga verifier generated from the pinned V2 vkey
 - [x] `scarb build` green
-- [ ] Wrapper contract: root registry + nullifier set + schema-liveness seam
-- [ ] Garaga-calldata proof encoder (`garaga calldata`) wired to an existing
-      testnet proof fixture
-- [ ] Verification exercised on Starknet Sepolia; gas, calldata size, and
-      tx-limit headroom measured
+- [x] Wrapper contract: root registry + nullifier set + schema-liveness seam
+      (compiles; fork test pending)
+- [x] Real V2 fixture proof encoded with `garaga calldata`: **1,977 felts**
+      (`contracts/psr_groth16_verifier/tests/proof_calldata.txt`)
+- [x] Real V2 fixture proof verified via snforge fork test against Sepolia
+      (real ECIP class): **~43.1M L2 gas** (`snforge test`)
+- [ ] Live declare/deploy + invoke on Starknet Sepolia (needs a funded
+      account); confirm on-chain gas matches the fork measurement
+
+Measured numbers vs the integration spec's order-of-magnitude estimate
+(~34M, Garaga's own benchmark vkey): our 4-public-input vkey verifies at
+~43.1M L2 gas with 1,977 felts of calldata.
