@@ -69,9 +69,27 @@ cd contracts/reputation_verifier && scarb build
       (`contracts/psr_groth16_verifier/tests/proof_calldata.txt`)
 - [x] Real V2 fixture proof verified via snforge fork test against Sepolia
       (real ECIP class): **~43.1M L2 gas** (`snforge test`)
-- [ ] Live declare/deploy + invoke on Starknet Sepolia (needs a funded
-      account); confirm on-chain gas matches the fork measurement
+- [x] Live declare/deploy + invoke on Starknet Sepolia: the committed V2
+      fixture proof verified on-chain and its replay was rejected with
+      `'nullifier already used'` (see deployments below)
 
-Measured numbers vs the integration spec's order-of-magnitude estimate
-(~34M, Garaga's own benchmark vkey): our 4-public-input vkey verifies at
-~43.1M L2 gas with 1,977 felts of calldata.
+Measured numbers: a single verification executes at ~43.1M L2 gas in the
+snforge fork (call execution only; the spec's ~34M order-of-magnitude came
+from Garaga's smaller benchmark vkey). The live end-to-end invoke — account
+validation, 1,978 felts of calldata, wrapper + verifier + ECIP library call,
+events — consumed **155.47M L2 gas / 4.81 STRK** on Sepolia.
+
+## Sepolia deployments (P0 — testnet, dev-key admin)
+
+| Contract | Class hash | Address |
+|---|---|---|
+| `Groth16VerifierBN254` | `0x003c72da2c846e3304885e59fb3e0dae07243d482adc29ef3c248d60ad99992d` | `0x01f339dfc3a1509bc3ccd1c7ea1a19c07bc0f89ad7378b505b3edc5f5b13b02e` |
+| `OpaqueReputationVerifierV2` | `0x5cf3d48bdceb355244e8cc284834f62c47fe8049d839df78271a08d9ac1f4c5` | `0x017a56e5a3963214781320bb1e007b6b72b97041ab8087261253e80233083eb6` |
+
+Admin / deployer: `sncast` account `opaque_deployer`
+(`0x029db6e717afae61c5693afb65da25fb71974ccfe6705a8cc9282a8c9d725ceb`,
+local dev keystore — rotate to a multisig before anything real).
+
+Live proof verification: [tx `0x05586dae…79c56`](https://sepolia.voyager.online/tx/0x05586dae22417286454e59584bc3aefcb4e0ead763df4fd3755af5cbfd379c56)
+(block 12156896) — `ReputationVerified` emitted, nullifier consumed
+(`is_nullifier_used` → `true`), replay rejected at estimation.
