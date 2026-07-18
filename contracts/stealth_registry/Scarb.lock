@@ -2,6 +2,21 @@
 version = 1
 
 [[package]]
+name = "openzeppelin_interfaces"
+version = "2.1.0"
+source = "registry+https://scarbs.xyz/"
+checksum = "sha256:f69fdb36eb894a0e0732385e723c5ff56d8cb4c1d49b29446c77eefac00b02a5"
+
+[[package]]
+name = "openzeppelin_utils"
+version = "2.1.0"
+source = "registry+https://scarbs.xyz/"
+checksum = "sha256:4d5504fef1c5a6d9fee6a3ae392004a4a24b4b3ccb790c5e5217da96beb73e08"
+dependencies = [
+ "openzeppelin_interfaces",
+]
+
+[[package]]
 name = "snforge_scarb_plugin"
 version = "0.57.0"
 source = "registry+https://scarbs.xyz/"
@@ -20,5 +35,6 @@ dependencies = [
 name = "stealth_registry"
 version = "0.1.0"
 dependencies = [
+ "openzeppelin_utils",
  "snforge_std",
 ]
