@@ -1,0 +1,13 @@
+[package]
+name = "opaque_reputation_verifier"
+version = "0.1.0"
+edition = "2024_07"
+
+[dependencies]
+starknet = "2.16.1"
+
+[cairo]
+sierra-replace-ids = false
+
+[[target.starknet-contract]]
+casm = true
