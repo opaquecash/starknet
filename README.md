@@ -89,6 +89,13 @@ events — consumed **155.47M L2 gas / 4.81 STRK** on Sepolia.
 | `Groth16VerifierBN254` | `0x003c72da2c846e3304885e59fb3e0dae07243d482adc29ef3c248d60ad99992d` | `0x01f339dfc3a1509bc3ccd1c7ea1a19c07bc0f89ad7378b505b3edc5f5b13b02e` |
 | `OpaqueReputationVerifierV2` | `0x5cf3d48bdceb355244e8cc284834f62c47fe8049d839df78271a08d9ac1f4c5` | `0x017a56e5a3963214781320bb1e007b6b72b97041ab8087261253e80233083eb6` |
 | `StealthAccount` (class only) | `0x04794bab07198e0585d2d7951dbc5860fba47fea2a15d227ca3237b7b9e484ed` | counterfactual per payment |
+| `StealthAnnouncer` | `0x625f476e46225bf2c050d956201d6be75183dd50d9f20d31c408f09fcbaa4bb` | `0x003b8258e84e6feec93239b442e6a91f532fda35fed67de4093b1d97150d2aa2` |
+| `StealthMetaAddressRegistry` | `0x6203ad71f44b9b4371a9b2f0394cef08045c3c8e14b86f34fee7517acafb819` | `0x047ff90c491384ecf8dba8b32b1eea7947f850ea92ddc196edcb0f508acff874` |
+
+First live announcement: CSAP canonical vector 1 announced through the
+`@opaquecash/stealth-chain-starknet` call builder and decoded back by its
+adapter ([tx `0x006efbb9…42d8`](https://sepolia.voyager.online/tx/0x006efbb9a62f28e529815fd4e1e71126e11462b869658019f587beed40d242d8),
+block 12158304).
 
 The `StealthAccount` class hash is a consensus-critical CSAP constant
 (spec/starknet-integration.md §7.1): every stealth address is a
