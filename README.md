@@ -15,6 +15,7 @@ the full integration plan live in the spec repo:
 | `contracts/reputation_verifier` | `OpaqueReputationVerifierV2` port: root registry (1h TTL, delete-on-evict), u256 nullifier set, schema-liveness seam (OPQ-006) | Fork-tested |
 | `contracts/stealth_announcer` | CSAP announcer: EIP-5564-shaped `Announcement` event, Solana-style input bounds | Tested |
 | `contracts/stealth_registry` | CSAP meta-address registry: ERC-6538-shaped storage, 66/98-byte length check, nonce seam for the SNIP-12 on-behalf flow | Tested |
+| `contracts/stealth_account` | CSAP stealth custody: non-upgradeable OZ `EthAccountComponent` account, one-time `P_stealth` signer, counterfactual per-payment address | Tested + declared |
 
 ## The generated verifier
 
@@ -87,6 +88,12 @@ events — consumed **155.47M L2 gas / 4.81 STRK** on Sepolia.
 |---|---|---|
 | `Groth16VerifierBN254` | `0x003c72da2c846e3304885e59fb3e0dae07243d482adc29ef3c248d60ad99992d` | `0x01f339dfc3a1509bc3ccd1c7ea1a19c07bc0f89ad7378b505b3edc5f5b13b02e` |
 | `OpaqueReputationVerifierV2` | `0x5cf3d48bdceb355244e8cc284834f62c47fe8049d839df78271a08d9ac1f4c5` | `0x017a56e5a3963214781320bb1e007b6b72b97041ab8087261253e80233083eb6` |
+| `StealthAccount` (class only) | `0x04794bab07198e0585d2d7951dbc5860fba47fea2a15d227ca3237b7b9e484ed` | counterfactual per payment |
+
+The `StealthAccount` class hash is a consensus-critical CSAP constant
+(spec/starknet-integration.md §7.1): every stealth address is a
+counterfactual deployment of this exact class, so redeclaring a changed
+class moves all future addresses.
 
 Admin / deployer: `sncast` account `opaque_deployer`
 (`0x029db6e717afae61c5693afb65da25fb71974ccfe6705a8cc9282a8c9d725ceb`,
