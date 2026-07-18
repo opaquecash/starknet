@@ -5,9 +5,15 @@ edition = "2024_07"
 
 [dependencies]
 starknet = "2.16.1"
+psr_groth16_verifier = { path = "../psr_groth16_verifier" }
+
+[dev-dependencies]
+snforge_std = "0.57.0"
+assert_macros = "2.16.1"
 
 [cairo]
 sierra-replace-ids = false
 
 [[target.starknet-contract]]
 casm = true
+build-external-contracts = ["psr_groth16_verifier::groth16_verifier::Groth16VerifierBN254"]

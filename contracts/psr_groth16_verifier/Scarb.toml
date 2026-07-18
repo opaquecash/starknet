@@ -16,6 +16,8 @@ inlining-strategy = 2
 snforge_std = "0.57.0"
 assert_macros = "2.16.1"
 
+[lib]
+
 [[target.starknet-contract]]
 casm = true
 casm-add-pythonic-hints = true
