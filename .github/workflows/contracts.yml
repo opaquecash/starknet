@@ -1,0 +1,49 @@
+name: Contracts
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: software-mansion/setup-scarb@v1
+        with:
+          scarb-version: "2.16.1"
+
+      - uses: foundry-rs/setup-snfoundry@v3
+        with:
+          starknet-foundry-version: "0.57.0"
+
+      # Build every package (proves the Garaga-generated verifier and the
+      # OZ-account-backed stealth account compile against pinned deps).
+      - name: Build all packages
+        run: |
+          set -e
+          for pkg in contracts/*/; do
+            if [ -f "$pkg/Scarb.toml" ]; then
+              echo "::group::scarb build $pkg"
+              (cd "$pkg" && scarb build)
+              echo "::endgroup::"
+            fi
+          done
+
+      # Run the network-free suites. The verifier and wrapper suites are fork
+      # tests that need live Starknet Sepolia state (the Garaga ECIP ops class
+      # is declared on-chain, not in a pristine test VM); they are validated
+      # locally and on-chain — see the live verification tx in README.md.
+      - name: Test (deterministic suites)
+        run: |
+          set -e
+          for pkg in stealth_announcer stealth_registry stealth_account; do
+            echo "::group::snforge test $pkg"
+            (cd "contracts/$pkg" && snforge test)
+            echo "::endgroup::"
+          done
