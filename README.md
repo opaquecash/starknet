@@ -17,7 +17,7 @@ the full integration plan live in the spec repo:
 | `contracts/stealth_registry` | CSAP meta-address registry: ERC-6538-shaped storage, 66/98-byte length check, SNIP-12 on-behalf registration through SRC-6 `is_valid_signature` with consumable nonces | Tested |
 | `contracts/stealth_account` | CSAP stealth custody: non-upgradeable OZ `EthAccountComponent` account, one-time `P_stealth` signer, counterfactual per-payment address | Tested + declared |
 | `contracts/psr_gate` | Tier-1 PSR consumer: credential-gated entry — enter only by proving a valid attestation under a required schema, one-time per nullifier (the integration thesis) | Live |
-| `contracts/ons_mirror` | Read-only ONS mirror fed by native L1→L2 messaging (`#[l1_handler]`): emitter allowlist, monotonic sequence, revoke-tombstone (OPQ-004) | Tested + declared |
+| `contracts/ons_mirror` | Read-only ONS mirror fed by native L1→L2 messaging (`#[l1_handler]`): emitter allowlist, monotonic sequence, revoke-tombstone (OPQ-004). Paired with `StarknetOnsMirrorSender` in `opaquecash/ethereum` | Live |
 
 ## The generated verifier
 
@@ -91,6 +91,7 @@ events — consumed **155.47M L2 gas / 4.81 STRK** on Sepolia.
 | `Groth16VerifierBN254` | `0x003c72da2c846e3304885e59fb3e0dae07243d482adc29ef3c248d60ad99992d` | `0x01f339dfc3a1509bc3ccd1c7ea1a19c07bc0f89ad7378b505b3edc5f5b13b02e` |
 | `OpaqueReputationVerifierV2` | `0x04361bf98499842b39bd103f4ddc890a0adf56e060a75d98fca8143fc45fb576` | `0x079ada2245bd7f7575c4c67c9ea34edc9c420c57de711762b8ffbb8483823af6` |
 | `PsrGate` | `0x0222458c219f5c760436f616862d7a9f2f1df8ab311ebcfc7dd83ac1cef08a6b` | `0x07103219e851b7bc16b07748e4427d38c2b884b06d524b52dbae9a04386b8331` |
+| `OpaqueNameMirror` | `0x01d0821469d516a81cddfd6ee6d88b5073657db561d9de2f6e723649ad4ff14a` | `0x0355472f6f63510795a34d3a39a62424a1658f1311b9237bc87509811c508328` |
 | `StealthAccount` (class only) | `0x04794bab07198e0585d2d7951dbc5860fba47fea2a15d227ca3237b7b9e484ed` | counterfactual per payment |
 | `StealthAnnouncer` | `0x625f476e46225bf2c050d956201d6be75183dd50d9f20d31c408f09fcbaa4bb` | `0x003b8258e84e6feec93239b442e6a91f532fda35fed67de4093b1d97150d2aa2` |
 | `StealthMetaAddressRegistry` | `0x6203ad71f44b9b4371a9b2f0394cef08045c3c8e14b86f34fee7517acafb819` | `0x047ff90c491384ecf8dba8b32b1eea7947f850ea92ddc196edcb0f508acff874` |
@@ -124,6 +125,15 @@ the committed V2 credential proof
 rejected on-chain with `nullifier already used`. A stealth identity enters
 only by proving, in zero knowledge, a valid attestation under the gate's
 schema, once per scope.
+
+ONS mirror (L1→L2): `OpaqueNameMirror` is paired with `StarknetOnsMirrorSender`
+on Ethereum Sepolia (`0xbdB9D13B8b5f94cBAf924d5AAEA216f66B9131Ef`), allowlisted
+as the mirror's L1 emitter. First live delivery: a name upsert published from
+the sender ([L1 tx `0x74b307bf…`](https://sepolia.etherscan.io/tx/0x74b307bf0d5f39861e4a82667f71a753a9865c81d853d6b86dac0f5db0283a21))
+travelled the native L1→L2 path (Ethereum Starknet Core → sequencer →
+`handle_mirror`); `resolve_meta` on the mirror then returned the exact spend/view
+keys sent from Ethereum, so the two halves are proven end-to-end, not just
+wire-compatible in tests.
 
 The `StealthAccount` class hash is a consensus-critical CSAP constant
 (spec/starknet-integration.md §7.1): every stealth address is a
