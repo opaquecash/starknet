@@ -31,6 +31,13 @@ pub trait ISchemaLiveness<TContractState> {
 pub trait IOpaqueReputationVerifierV2<TContractState> {
     fn update_merkle_root(ref self: TContractState, root: u256);
     fn verify_reputation(ref self: TContractState, full_proof_with_hints: Span<felt252>);
+    /// Verify + consume, returning the four V2 public signals
+    /// `(merkle_root, attestation_id, external_nullifier, nullifier_hash)`.
+    /// Consumer gates (e.g. `PsrGate`) call this to enforce their own schema /
+    /// scope policy on top of the base validity + one-time-use checks.
+    fn verify_and_consume(
+        ref self: TContractState, full_proof_with_hints: Span<felt252>,
+    ) -> (u256, u256, u256, u256);
     fn verify_reputation_view(
         self: @TContractState, full_proof_with_hints: Span<felt252>,
     ) -> bool;
@@ -140,6 +147,12 @@ mod OpaqueReputationVerifierV2 {
         }
 
         fn verify_reputation(ref self: ContractState, full_proof_with_hints: Span<felt252>) {
+            self.verify_and_consume(full_proof_with_hints);
+        }
+
+        fn verify_and_consume(
+            ref self: ContractState, full_proof_with_hints: Span<felt252>,
+        ) -> (u256, u256, u256, u256) {
             let (merkle_root, attestation_id, external_nullifier, nullifier_hash) = self
                 .verify_and_extract(full_proof_with_hints);
             assert(!self.nullifiers.read(nullifier_hash), 'nullifier already used');
@@ -150,6 +163,7 @@ mod OpaqueReputationVerifierV2 {
                         nullifier_hash, attestation_id, external_nullifier, merkle_root,
                     },
                 );
+            (merkle_root, attestation_id, external_nullifier, nullifier_hash)
         }
 
         fn verify_reputation_view(

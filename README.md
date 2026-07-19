@@ -16,6 +16,7 @@ the full integration plan live in the spec repo:
 | `contracts/stealth_announcer` | CSAP announcer: EIP-5564-shaped `Announcement` event, Solana-style input bounds | Tested |
 | `contracts/stealth_registry` | CSAP meta-address registry: ERC-6538-shaped storage, 66/98-byte length check, SNIP-12 on-behalf registration through SRC-6 `is_valid_signature` with consumable nonces | Tested |
 | `contracts/stealth_account` | CSAP stealth custody: non-upgradeable OZ `EthAccountComponent` account, one-time `P_stealth` signer, counterfactual per-payment address | Tested + declared |
+| `contracts/psr_gate` | Tier-1 PSR consumer: credential-gated entry — enter only by proving a valid attestation under a required schema, one-time per nullifier (the integration thesis) | Live |
 
 ## The generated verifier
 
@@ -87,10 +88,15 @@ events — consumed **155.47M L2 gas / 4.81 STRK** on Sepolia.
 | Contract | Class hash | Address |
 |---|---|---|
 | `Groth16VerifierBN254` | `0x003c72da2c846e3304885e59fb3e0dae07243d482adc29ef3c248d60ad99992d` | `0x01f339dfc3a1509bc3ccd1c7ea1a19c07bc0f89ad7378b505b3edc5f5b13b02e` |
-| `OpaqueReputationVerifierV2` | `0x5cf3d48bdceb355244e8cc284834f62c47fe8049d839df78271a08d9ac1f4c5` | `0x017a56e5a3963214781320bb1e007b6b72b97041ab8087261253e80233083eb6` |
+| `OpaqueReputationVerifierV2` | `0x04361bf98499842b39bd103f4ddc890a0adf56e060a75d98fca8143fc45fb576` | `0x079ada2245bd7f7575c4c67c9ea34edc9c420c57de711762b8ffbb8483823af6` |
+| `PsrGate` | `0x0222458c219f5c760436f616862d7a9f2f1df8ab311ebcfc7dd83ac1cef08a6b` | `0x07103219e851b7bc16b07748e4427d38c2b884b06d524b52dbae9a04386b8331` |
 | `StealthAccount` (class only) | `0x04794bab07198e0585d2d7951dbc5860fba47fea2a15d227ca3237b7b9e484ed` | counterfactual per payment |
 | `StealthAnnouncer` | `0x625f476e46225bf2c050d956201d6be75183dd50d9f20d31c408f09fcbaa4bb` | `0x003b8258e84e6feec93239b442e6a91f532fda35fed67de4093b1d97150d2aa2` |
 | `StealthMetaAddressRegistry` | `0x6203ad71f44b9b4371a9b2f0394cef08045c3c8e14b86f34fee7517acafb819` | `0x047ff90c491384ecf8dba8b32b1eea7947f850ea92ddc196edcb0f508acff874` |
+
+The `OpaqueReputationVerifierV2` above is the current build (adds
+`verify_and_consume`, which `PsrGate` uses); the earlier instance
+`0x017a56e5…83eb6` carried the first live proof verification below.
 
 First live announcement: CSAP canonical vector 1 announced through the
 `@opaquecash/stealth-chain-starknet` call builder and decoded back by its
@@ -109,6 +115,14 @@ owned output (`OpaqueClient.buildStarknetSweep`), self-deployed it
 paid from its own balance, and transferred the funds out
 ([`0x3a4cf7f1…`](https://sepolia.voyager.online/tx/0x3a4cf7f1fb85f8ce067b6adf8f14e491914a4e292e4d7b7aae9135ddff86ada)) —
 the full send → scan → own → sweep lifecycle proven on-chain.
+
+First live PSR-gated entry (the integration thesis): `PsrGate.enter` accepted
+the committed V2 credential proof
+([tx `0x0668c1f0…`](https://sepolia.voyager.online/tx/0x0668c1f055ad96b0afe6d82d96d95dff0f99b0abe1af166419a8461f01559014)) —
+`has_entered` flipped true and `entry_count` reached 1 — while a replay was
+rejected on-chain with `nullifier already used`. A stealth identity enters
+only by proving, in zero knowledge, a valid attestation under the gate's
+schema, once per scope.
 
 The `StealthAccount` class hash is a consensus-critical CSAP constant
 (spec/starknet-integration.md §7.1): every stealth address is a

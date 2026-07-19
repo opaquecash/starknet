@@ -1,10 +1,11 @@
 [package]
-name = "opaque_reputation_verifier"
+name = "psr_gate"
 version = "0.1.0"
 edition = "2024_07"
 
 [dependencies]
 starknet = "2.16.1"
+opaque_reputation_verifier = { path = "../reputation_verifier" }
 psr_groth16_verifier = { path = "../psr_groth16_verifier" }
 
 [dev-dependencies]
@@ -14,8 +15,9 @@ assert_macros = "2.16.1"
 [cairo]
 sierra-replace-ids = false
 
-[lib]
-
 [[target.starknet-contract]]
 casm = true
-build-external-contracts = ["psr_groth16_verifier::groth16_verifier::Groth16VerifierBN254"]
+build-external-contracts = [
+    "opaque_reputation_verifier::OpaqueReputationVerifierV2",
+    "psr_groth16_verifier::groth16_verifier::Groth16VerifierBN254",
+]
