@@ -103,6 +103,13 @@ block 12167420) that funded the counterfactual stealth account
 `0x352ca9…abfd5` with 0.001 STRK; the recipient then scanned Starknet and
 owned the payment end-to-end.
 
+First live sweep: the recipient reconstructed the stealth account from an
+owned output (`OpaqueClient.buildStarknetSweep`), self-deployed it
+([deploy_account `0x6713f89c…`](https://sepolia.voyager.online/tx/0x6713f89cbe225dd1dd949f3b63629517e4c63a0b99cb1924cf4f127e8513fee))
+paid from its own balance, and transferred the funds out
+([`0x3a4cf7f1…`](https://sepolia.voyager.online/tx/0x3a4cf7f1fb85f8ce067b6adf8f14e491914a4e292e4d7b7aae9135ddff86ada)) —
+the full send → scan → own → sweep lifecycle proven on-chain.
+
 The `StealthAccount` class hash is a consensus-critical CSAP constant
 (spec/starknet-integration.md §7.1): every stealth address is a
 counterfactual deployment of this exact class, so redeclaring a changed
