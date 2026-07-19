@@ -17,6 +17,7 @@ the full integration plan live in the spec repo:
 | `contracts/stealth_registry` | CSAP meta-address registry: ERC-6538-shaped storage, 66/98-byte length check, SNIP-12 on-behalf registration through SRC-6 `is_valid_signature` with consumable nonces | Tested |
 | `contracts/stealth_account` | CSAP stealth custody: non-upgradeable OZ `EthAccountComponent` account, one-time `P_stealth` signer, counterfactual per-payment address | Tested + declared |
 | `contracts/psr_gate` | Tier-1 PSR consumer: credential-gated entry — enter only by proving a valid attestation under a required schema, one-time per nullifier (the integration thesis) | Live |
+| `contracts/ons_mirror` | Read-only ONS mirror fed by native L1→L2 messaging (`#[l1_handler]`): emitter allowlist, monotonic sequence, revoke-tombstone (OPQ-004) | Tested + declared |
 
 ## The generated verifier
 

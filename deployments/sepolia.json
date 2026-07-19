@@ -15,7 +15,8 @@
     "stealthRegistry": "0x6203ad71f44b9b4371a9b2f0394cef08045c3c8e14b86f34fee7517acafb819",
     "reputationVerifier": "0x4361bf98499842b39bd103f4ddc890a0adf56e060a75d98fca8143fc45fb576",
     "groth16Verifier": "0x003c72da2c846e3304885e59fb3e0dae07243d482adc29ef3c248d60ad99992d",
-    "psrGate": "0x222458c219f5c760436f616862d7a9f2f1df8ab311ebcfc7dd83ac1cef08a6b"
+    "psrGate": "0x222458c219f5c760436f616862d7a9f2f1df8ab311ebcfc7dd83ac1cef08a6b",
+    "onsMirror": "0x1d0821469d516a81cddfd6ee6d88b5073657db561d9de2f6e723649ad4ff14a"
   },
   "announcerFromBlock": 12158000
 }

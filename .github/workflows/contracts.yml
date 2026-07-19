@@ -42,7 +42,7 @@ jobs:
       - name: Test (deterministic suites)
         run: |
           set -e
-          for pkg in stealth_announcer stealth_registry stealth_account; do
+          for pkg in stealth_announcer stealth_registry stealth_account ons_mirror; do
             echo "::group::snforge test $pkg"
             (cd "contracts/$pkg" && snforge test)
             echo "::endgroup::"
