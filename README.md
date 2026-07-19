@@ -97,6 +97,12 @@ First live announcement: CSAP canonical vector 1 announced through the
 adapter ([tx `0x006efbb9…42d8`](https://sepolia.voyager.online/tx/0x006efbb9a62f28e529815fd4e1e71126e11462b869658019f587beed40d242d8),
 block 12158304).
 
+First live stealth payment: `OpaqueClient.buildStarknetStealthSend` produced
+an ERC-20 `transfer` + `announce` multicall ([tx `0x6c7b7905…98fa2`](https://sepolia.voyager.online/tx/0x6c7b790534efe42bb3e51edfc82165395fc2382548e50a0c87afbf444798fa2),
+block 12167420) that funded the counterfactual stealth account
+`0x352ca9…abfd5` with 0.001 STRK; the recipient then scanned Starknet and
+owned the payment end-to-end.
+
 The `StealthAccount` class hash is a consensus-critical CSAP constant
 (spec/starknet-integration.md §7.1): every stealth address is a
 counterfactual deployment of this exact class, so redeclaring a changed
