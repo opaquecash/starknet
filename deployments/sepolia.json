@@ -1,0 +1,19 @@
+{
+  "network": "sepolia",
+  "chainId": 21326,
+  "nodeUrl": "https://api.zan.top/public/starknet-sepolia/rpc/v0_10",
+  "contracts": {
+    "stealthAnnouncer": "0x003b8258e84e6feec93239b442e6a91f532fda35fed67de4093b1d97150d2aa2",
+    "stealthRegistry": "0x047ff90c491384ecf8dba8b32b1eea7947f850ea92ddc196edcb0f508acff874",
+    "reputationVerifier": "0x017a56e5a3963214781320bb1e007b6b72b97041ab8087261253e80233083eb6",
+    "groth16Verifier": "0x01f339dfc3a1509bc3ccd1c7ea1a19c07bc0f89ad7378b505b3edc5f5b13b02e"
+  },
+  "classHashes": {
+    "stealthAccount": "0x04794bab07198e0585d2d7951dbc5860fba47fea2a15d227ca3237b7b9e484ed",
+    "stealthAnnouncer": "0x625f476e46225bf2c050d956201d6be75183dd50d9f20d31c408f09fcbaa4bb",
+    "stealthRegistry": "0x6203ad71f44b9b4371a9b2f0394cef08045c3c8e14b86f34fee7517acafb819",
+    "reputationVerifier": "0x5cf3d48bdceb355244e8cc284834f62c47fe8049d839df78271a08d9ac1f4c5",
+    "groth16Verifier": "0x003c72da2c846e3304885e59fb3e0dae07243d482adc29ef3c248d60ad99992d"
+  },
+  "announcerFromBlock": 12158000
+}
